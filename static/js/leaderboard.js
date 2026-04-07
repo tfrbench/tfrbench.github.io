@@ -64,8 +64,22 @@ function calculateMetricOverall(datasets) {
 
 function calculateAllDynamicOveralls() {
     leaderboardData.forEach(modelData => {
-        modelData.reasoning.overall = calculateMetricOverall(modelData.reasoning.datasets);
-        modelData.event.overall = calculateMetricOverall(modelData.event.datasets);
+        modelData.overall = calculateMetricOverall(modelData.datasets);
+    });
+}
+
+function getFlattenedData() {
+    return leaderboardData.map(d => {
+        let displayName = d.model;
+        if (d.description) {
+            displayName += ` (${d.description})`;
+        }
+        return {
+            model: displayName,
+            link: d.link,
+            datasets: d.datasets,
+            overall: d.overall
+        };
     });
 }
 
@@ -117,39 +131,34 @@ function initLeaderboard() {
     setView('overall');
 }
 
-// Calculates floating-point Average Rank across ALL 8 metrics for a specific dataset
+// Calculates floating-point Average Rank across ALL 4 metrics for a specific dataset using flattened data
 function calculateDatasetRanks(ds) {
+    let flattened = getFlattenedData();
     let rankSums = {};
-    leaderboardData.forEach(d => rankSums[d.model] = 0);
+    flattened.forEach(d => rankSums[d.model] = 0);
     
-    const settings = ['event', 'reasoning'];
     const metrics = ['dom', 'fcst', 'evt', 'logic'];
     let numRankings = 0;
 
-    settings.forEach(setting => {
-        metrics.forEach(metric => {
-            numRankings++;
-            let metricScores = leaderboardData.map(d => {
-                return { model: d.model, score: d[setting].datasets[ds][metric] };
-            });
-            
-            // Sort descending by score for this specific metric
-            metricScores.sort((a, b) => b.score - a.score);
-            
-            // Assign ranks (with tie-breaking logic)
-            let currentRank = 1;
-            for (let i = 0; i < metricScores.length; i++) {
-                if (i > 0 && metricScores[i].score === metricScores[i-1].score) {
-                    rankSums[metricScores[i].model] += currentRank; 
-                } else {
-                    currentRank = i + 1;
-                    rankSums[metricScores[i].model] += currentRank;
-                }
-            }
+    metrics.forEach(metric => {
+        numRankings++;
+        let metricScores = flattened.map(d => {
+            return { model: d.model, score: d.datasets[ds][metric] };
         });
+        
+        metricScores.sort((a, b) => b.score - a.score);
+        
+        let currentRank = 1;
+        for (let i = 0; i < metricScores.length; i++) {
+            if (i > 0 && metricScores[i].score === metricScores[i-1].score) {
+                rankSums[metricScores[i].model] += currentRank; 
+            } else {
+                currentRank = i + 1;
+                rankSums[metricScores[i].model] += currentRank;
+            }
+        }
     });
 
-    // Compute the final average rank (divided by 8 metrics total)
     let averageRanks = {};
     for (let model in rankSums) {
         averageRanks[model] = rankSums[model] / numRankings;
@@ -158,26 +167,18 @@ function calculateDatasetRanks(ds) {
 }
 
 function getProcessedDatasetData(ds) {
+    let flattened = getFlattenedData();
     let avgRanks = calculateDatasetRanks(ds);
     
-    let data = leaderboardData.map(d => {
-        let e = d.event.datasets[ds];
-        let r = d.reasoning.datasets[ds];
-        
+    let data = flattened.map(d => {
         return {
             model: d.model, 
             link: d.link, 
             avgRank: avgRanks[d.model],
-            event: {
-                dom: e.dom, fcst: e.fcst, evt: e.evt, logic: e.logic
-            },
-            reasoning: {
-                dom: r.dom, fcst: r.fcst, evt: r.evt, logic: r.logic
-            }
+            scores: d.datasets[ds]
         };
     });
     
-    // Sort by the newly calculated floating-point Average Rank (ascending)
     data.sort((a, b) => a.avgRank - b.avgRank);
     return data;
 }
@@ -187,34 +188,32 @@ function titleCase(str) {
     return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
-// Calculates Average Rank across ALL 8 metrics for the OVERALL view
+// Calculates Average Rank across ALL 4 metrics for the OVERALL view using flattened data
 function calculateOverallRanks() {
+    let flattened = getFlattenedData();
     let rankSums = {};
-    leaderboardData.forEach(d => rankSums[d.model] = 0);
+    flattened.forEach(d => rankSums[d.model] = 0);
     
-    const settings = ['event', 'reasoning'];
     const metrics = ['dom', 'fcst', 'evt', 'logic'];
     let numRankings = 0;
 
-    settings.forEach(setting => {
-        metrics.forEach(metric => {
-            numRankings++;
-            let metricScores = leaderboardData.map(d => {
-                return { model: d.model, score: d[setting].overall[metric] };
-            });
-            
-            metricScores.sort((a, b) => b.score - a.score);
-            
-            let currentRank = 1;
-            for (let i = 0; i < metricScores.length; i++) {
-                if (i > 0 && metricScores[i].score === metricScores[i-1].score) {
-                    rankSums[metricScores[i].model] += currentRank; 
-                } else {
-                    currentRank = i + 1;
-                    rankSums[metricScores[i].model] += currentRank;
-                }
-            }
+    metrics.forEach(metric => {
+        numRankings++;
+        let metricScores = flattened.map(d => {
+            return { model: d.model, score: d.overall[metric] };
         });
+        
+        metricScores.sort((a, b) => b.score - a.score);
+        
+        let currentRank = 1;
+        for (let i = 0; i < metricScores.length; i++) {
+            if (i > 0 && metricScores[i].score === metricScores[i-1].score) {
+                rankSums[metricScores[i].model] += currentRank; 
+            } else {
+                currentRank = i + 1;
+                rankSums[metricScores[i].model] += currentRank;
+            }
+        }
     });
 
     let averageRanks = {};
@@ -225,15 +224,15 @@ function calculateOverallRanks() {
 }
 
 function getProcessedOverallData() {
+    let flattened = getFlattenedData();
     let avgRanks = calculateOverallRanks();
     
-    let data = leaderboardData.map(d => {
+    let data = flattened.map(d => {
         return {
             model: d.model, 
             link: d.link, 
             avgRank: avgRanks[d.model],
-            event: d.event.overall,
-            reasoning: d.reasoning.overall
+            scores: d.overall
         };
     });
     
@@ -242,26 +241,20 @@ function getProcessedOverallData() {
 }
 
 function getProcessedDomainData() {
-    // 1. Calculate domain-specific overall for each model
-    let domainData = leaderboardData.map(d => {
-        let domainDatasetsReasoning = {};
-        let domainDatasetsEvent = {};
-        
+    let flattened = getFlattenedData();
+    let domainData = flattened.map(d => {
+        let domainDatasets = {};
         domainConfig[selectedDomain].forEach(ds => {
-            domainDatasetsReasoning[ds] = d.reasoning.datasets[ds];
-            domainDatasetsEvent[ds] = d.event.datasets[ds];
+            domainDatasets[ds] = d.datasets[ds];
         });
 
         return {
             model: d.model,
             link: d.link,
-            event: calculateMetricOverall(domainDatasetsEvent),
-            reasoning: calculateMetricOverall(domainDatasetsReasoning)
+            scores: calculateMetricOverall(domainDatasets)
         };
     });
 
-    // 2. Rank models based on these domain-specific overalls
-    // We can reuse calculateOverallRanks logic if we make it accept data
     let avgRanks = calculateRanksForData(domainData); 
     
     domainData.forEach(d => {
@@ -272,34 +265,30 @@ function getProcessedDomainData() {
     return domainData;
 }
 
-// Generic rank calculator for aggregated data structure [{model, event: {dom...}, reasoning: {dom...}}]
 function calculateRanksForData(data) {
     let rankSums = {};
     data.forEach(d => rankSums[d.model] = 0);
     
-    const settings = ['event', 'reasoning'];
     const metrics = ['dom', 'fcst', 'evt', 'logic'];
     let numRankings = 0;
 
-    settings.forEach(setting => {
-        metrics.forEach(metric => {
-            numRankings++;
-            let metricScores = data.map(d => {
-                return { model: d.model, score: d[setting][metric] };
-            });
-            
-            metricScores.sort((a, b) => b.score - a.score);
-            
-            let currentRank = 1;
-            for (let i = 0; i < metricScores.length; i++) {
-                if (i > 0 && metricScores[i].score === metricScores[i-1].score) {
-                    rankSums[metricScores[i].model] += currentRank; 
-                } else {
-                    currentRank = i + 1;
-                    rankSums[metricScores[i].model] += currentRank;
-                }
-            }
+    metrics.forEach(metric => {
+        numRankings++;
+        let metricScores = data.map(d => {
+            return { model: d.model, score: d.scores[metric] };
         });
+        
+        metricScores.sort((a, b) => b.score - a.score);
+        
+        let currentRank = 1;
+        for (let i = 0; i < metricScores.length; i++) {
+            if (i > 0 && metricScores[i].score === metricScores[i-1].score) {
+                rankSums[metricScores[i].model] += currentRank; 
+            } else {
+                currentRank = i + 1;
+                rankSums[metricScores[i].model] += currentRank;
+            }
+        }
     });
 
     let averageRanks = {};
@@ -309,14 +298,13 @@ function calculateRanksForData(data) {
     return averageRanks;
 }
 
-
 function getProcessedSingleDatasetData() {
-    let data = leaderboardData.map(d => {
+    let flattened = getFlattenedData();
+    let data = flattened.map(d => {
         return {
             model: d.model,
             link: d.link,
-            event: d.event.datasets[selectedDataset],
-            reasoning: d.reasoning.datasets[selectedDataset]
+            scores: d.datasets[selectedDataset]
         };
     });
 
@@ -357,17 +345,11 @@ function renderAggregatedTable(data, tableTitle) {
         <thead>
             <tr style="background-color: #f4f4f4;">
                 <th rowspan="2" class="has-text-centered is-vcentered" style="width: 80px; white-space: nowrap;">Average Rank</th>
-                <th rowspan="2" class="has-text-left is-vcentered" style="border-right: 2px solid #dbdbdb; white-space: nowrap;">Model</th>
+                <th rowspan="2" class="has-text-centered is-vcentered" style="text-align: center !important; border-right: 2px solid #dbdbdb; white-space: nowrap;">Model</th>
                 
-                <th colspan="4" class="has-text-centered is-vcentered" style="background-color: rgba(50, 0, 0, 0.05); border-right: 2px solid #dbdbdb;">Event Forecast + Reasoning</th>
-                <th colspan="4" class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.05);">w/ Reasoning Only</th>
+                <th colspan="4" class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.05);">Reasoning Evaluation</th>
             </tr>
             <tr style="background-color: #fafafa;">
-                <th class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.02); white-space: nowrap;">Domain<br>Relevance</th>
-                <th class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.02); white-space: nowrap;">Forecast<br>Correctness</th>
-                <th class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.02); white-space: nowrap;">Event<br>Relevance</th>
-                <th class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.02); border-right: 2px solid #dbdbdb; white-space: nowrap;">Logic<br>Consistency</th>
-                
                 <th class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.02); white-space: nowrap;">Domain<br>Relevance</th>
                 <th class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.02); white-space: nowrap;">Forecast<br>Correctness</th>
                 <th class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.02); white-space: nowrap;">Event<br>Relevance</th>
@@ -386,17 +368,12 @@ function renderAggregatedTable(data, tableTitle) {
 
         tbody += `<tr>
             <td class="has-text-centered is-vcentered" style="white-space: nowrap;"><strong>${rankDisplay}</strong></td>
-            <td class="has-text-left is-vcentered" style="border-right: 2px solid #dbdbdb; white-space: nowrap;">${modelDisplay}</td>
+            <td class="has-text-centered is-vcentered" style="border-right: 2px solid #dbdbdb; white-space: nowrap;">${modelDisplay}</td>
             
-            <td class="has-text-centered is-vcentered">${row.event.dom.toFixed(2)}</td>
-            <td class="has-text-centered is-vcentered">${row.event.fcst.toFixed(2)}</td>
-            <td class="has-text-centered is-vcentered">${row.event.evt.toFixed(2)}</td>
-            <td class="has-text-centered is-vcentered" style="border-right: 2px solid #dbdbdb;">${row.event.logic.toFixed(2)}</td>
-
-            <td class="has-text-centered is-vcentered">${row.reasoning.dom.toFixed(2)}</td>
-            <td class="has-text-centered is-vcentered">${row.reasoning.fcst.toFixed(2)}</td>
-            <td class="has-text-centered is-vcentered">${row.reasoning.evt.toFixed(2)}</td>
-            <td class="has-text-centered is-vcentered">${row.reasoning.logic.toFixed(2)}</td>
+            <td class="has-text-centered is-vcentered">${row.scores.dom.toFixed(2)}</td>
+            <td class="has-text-centered is-vcentered">${row.scores.fcst.toFixed(2)}</td>
+            <td class="has-text-centered is-vcentered">${row.scores.evt.toFixed(2)}</td>
+            <td class="has-text-centered is-vcentered">${row.scores.logic.toFixed(2)}</td>
         </tr>`;
     });
 
@@ -420,17 +397,11 @@ function renderTable() {
                 <th rowspan="2" class="has-text-centered is-vcentered" style="width: 60px;">Domain</th>
                 <th rowspan="2" class="has-text-centered is-vcentered" style="width: 60px;">Dataset</th>
                 <th rowspan="2" class="has-text-centered is-vcentered" style="width: 80px; white-space: nowrap;">Average Rank</th>
-                <th rowspan="2" class="has-text-left is-vcentered" style="border-right: 2px solid #dbdbdb; white-space: nowrap;">Model</th>
+                <th rowspan="2" class="has-text-centered is-vcentered" style="text-align: center !important; border-right: 2px solid #dbdbdb; white-space: nowrap;">Model</th>
                 
-                <th colspan="4" class="has-text-centered is-vcentered" style="background-color: rgba(50, 0, 0, 0.05); border-right: 2px solid #dbdbdb;">Event Forecast + Reasoning</th>
-                <th colspan="4" class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.05);">w/ Reasoning Only</th>
+                <th colspan="4" class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.05);">Reasoning Evaluation</th>
             </tr>
             <tr style="background-color: #fafafa;">
-                <th class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.02); white-space: nowrap;">Domain<br>Relevance</th>
-                <th class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.02); white-space: nowrap;">Forecast<br>Correctness</th>
-                <th class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.02); white-space: nowrap;">Event<br>Relevance</th>
-                <th class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.02); border-right: 2px solid #dbdbdb; white-space: nowrap;">Logic<br>Consistency</th>
-                
                 <th class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.02); white-space: nowrap;">Domain<br>Relevance</th>
                 <th class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.02); white-space: nowrap;">Forecast<br>Correctness</th>
                 <th class="has-text-centered is-vcentered" style="background-color: rgba(0, 0, 0, 0.02); white-space: nowrap;">Event<br>Relevance</th>
@@ -440,7 +411,7 @@ function renderTable() {
     `;
 
     let tbody = `<tbody>`;
-    const numModels = leaderboardData.length;
+    const numModels = getFlattenedData().length;
 
     // Render by Domain, then by Dataset
     Object.keys(domainConfig).forEach((domain, domainIdx) => {
@@ -478,17 +449,12 @@ function renderTable() {
 
                 tbody += `
                     <td class="has-text-centered is-vcentered" style="white-space: nowrap;"><strong>${rankDisplay}</strong></td>
-                    <td class="has-text-left is-vcentered" style="border-right: 2px solid #dbdbdb; white-space: nowrap;">${modelDisplay}</td>
+                    <td class="has-text-centered is-vcentered" style="border-right: 2px solid #dbdbdb; white-space: nowrap;">${modelDisplay}</td>
                     
-                    <td class="has-text-centered is-vcentered">${row.event.dom.toFixed(2)}</td>
-                    <td class="has-text-centered is-vcentered">${row.event.fcst.toFixed(2)}</td>
-                    <td class="has-text-centered is-vcentered">${row.event.evt.toFixed(2)}</td>
-                    <td class="has-text-centered is-vcentered" style="border-right: 2px solid #dbdbdb;">${row.event.logic.toFixed(2)}</td>
-
-                    <td class="has-text-centered is-vcentered">${row.reasoning.dom.toFixed(2)}</td>
-                    <td class="has-text-centered is-vcentered">${row.reasoning.fcst.toFixed(2)}</td>
-                    <td class="has-text-centered is-vcentered">${row.reasoning.evt.toFixed(2)}</td>
-                    <td class="has-text-centered is-vcentered">${row.reasoning.logic.toFixed(2)}</td>
+                    <td class="has-text-centered is-vcentered">${row.scores.dom.toFixed(2)}</td>
+                    <td class="has-text-centered is-vcentered">${row.scores.fcst.toFixed(2)}</td>
+                    <td class="has-text-centered is-vcentered">${row.scores.evt.toFixed(2)}</td>
+                    <td class="has-text-centered is-vcentered">${row.scores.logic.toFixed(2)}</td>
                 </tr>`;
             });
         });
