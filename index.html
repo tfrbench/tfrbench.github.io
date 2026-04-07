@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TFRBench: A Reasoning Benchmark for Evaluating Forecasting Systems">
+    <meta name="keywords" content="Forecasting, Reasoning, Benchmark, Foundation Models, Machine Learning">
+    <title>TFRBench: A Reasoning Benchmark for Evaluating Forecasting Systems</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+    <link rel="stylesheet" href="./static/css/bulma.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+    <link rel="stylesheet" href="./static/css/index.css">
+    <link rel="stylesheet" href="./static/css/leaderboard.css">
+
+    <link rel="icon" type="image/png" href="./static/images/icon.png">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script>
+    <script src="./static/js/index.js"></script>
+    <script src="./data/leaderboardData.js"></script>
+    <script src="./static/js/leaderboard.js"></script>
+</head>
+
+<body>
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container is-max-desktop">
+                <div class="columns is-centered">
+                    <div class="column has-text-centered">
+                        <h1 class="title is-1 publication-title">
+                            <img src="./static/images/icon.png" alt="TFRBench"
+                                style="height: 1.2em; vertical-align: middle; border-radius: 50%;">
+                            <i>TFRBench</i> :
+                            <p style="font-size:xx-large;">
+                                A Reasoning Benchmark for Evaluating Forecasting Systems
+                            </p>
+                        </h1>
+                        <div class="is-size-5 publication-authors">
+                            <span class="author-block">
+                                <a href="https://scholar.google.com/citations?user=L9epoWcAAAAJ&hl=en">Md Atik Ahamed</a><sup>1,2*</sup>,
+                            </span>
+                            <span class="author-block">
+                                <a href="https://scholar.google.com/citations?user=2UPwJC4AAAAJ&hl=en">Mihir Parmar</a><sup>1*</sup>,
+                            </span>
+                            <span class="author-block">
+                                <a href="https://scholar.google.com/citations?user=kNeah3kAAAAJ&hl=en">Palash Goyal</a><sup>1</sup>,
+                            </span>
+                            <span class="author-block">
+                                <a href="https://scholar.google.com/citations?user=LA3LgH4AAAAJ&hl=en">Yiwen Song</a><sup>1</sup>,
+                            </span>
+                            <span class="author-block">
+                                <a href="https://scholar.google.com/citations?user=C__97UYAAAAJ&hl=en">Long T. Le</a><sup>1</sup>,
+                            </span>
+                            <span class="author-block">
+                                <a href="https://scholar.google.com/citations?user=tpRmu_MAAAAJ&hl=en">Qiang Cheng</a><sup>2</sup>,
+                            </span>
+                            <span class="author-block">
+                                <a href="https://scholar.google.com/citations?user=vqHIt_sAAAAJ&hl=en">Chun-Liang Li</a><sup>1</sup>,
+                            </span>
+                            <span class="author-block">
+                                <a href="https://scholar.google.com/citations?user=B1lAghgAAAAJ&hl=en">Hamid Palangi</a><sup>1</sup>,
+                            </span>
+                            <span class="author-block">
+                                <a href="https://scholar.google.com/citations?user=kiFd6A8AAAAJ&hl=en">Jinsung Yoon</a><sup>1</sup>,
+                            </span>
+                            <span class="author-block">
+                                <a href="https://scholar.google.com/citations?user=ahSpJOAAAAAJ&hl=en">Tomas Pfister</a><sup>1</sup>
+                            </span>
+                        </div>
+
+                        <div class="equal-contrib">
+                            <sup>*</sup>Equal Contribution
+                        </div>
+
+                        <div class="is-size-5 publication-authors">
+                            <span class="author-block"><sup>1</sup>Google Cloud AI Research</span>
+                            <span class="author-block"><sup>2</sup>University of Kentucky</span>
+                        </div>
+
+                        <br><br>
+
+                        <div class="column has-text-centered">
+                            <div class="publication-links">
+                                <span class="link-block">
+                                    <a href="#" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon"><i class="ai ai-arxiv"></i></span>
+                                        <span>arXiv</span>
+                                    </a>
+                                </span>
+
+                                <span class="link-block">
+                                    <a href="https://forms.gle/gNqKrmw7hawY5VK99" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">🤗</span>
+                                        <span>Submit Yours</span>
+                                    </a>
+                                </span>
+
+                                <!-- <span class="link-block">
+                                    <a href="#" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon"><i class="fab fa-github"></i></span>
+                                        <span>Code</span>
+                                    </a>
+                                </span> -->
+
+                                <span class="link-block">
+                                    <a href="#leaderboard" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">🏆</span>
+                                        <span>Leaderboard</span>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Abstract</h2>
+                    <div class="content has-text-justified">
+                        <p>
+                            We introduce <i>TFRBench</i>, the first benchmark designed to evaluate the reasoning
+                            capabilities of forecasting systems. Traditionally, time-series forecasting has been
+                            evaluated solely on numerical accuracy, treating foundation models as “black
+                            boxes.” Unlike existing benchmarks, <i>TFRBench</i>
+                            provides a protocol for evaluating the reasoning generated by forecasting
+                            systems–specifically their analysis of cross-channel dependencies,
+                            trends, and external events. To enable this, we
+                            propose a systematic multi-agent framework that
+                            utilizes an iterative verification loop to synthesize
+                            numerically grounded reasoning traces. Spanning
+                            ten datasets across five domains, our evaluation
+                            confirms that this reasoning is causally effective;
+                            useful for evaluation; and prompting LLMs with
+                            our generated traces significantly improves forecasting accuracy compared to direct
+                            numerical prediction (e.g., avg. ∼ 40.2% → 56.6%), validating the quality of our reasoning.
+                            Conversely, benchmarking experiments reveal that off-theshelf LLMs consistently struggle with both
+                            reasoning (lower LLM-as-a-Judge scores) and numerical forecasting, frequently failing to capture
+                            domain-specific dynamics. <i>TFRBench</i> thus establishes a new standard for interpretable,
+                            reasoningbased evaluation in time-series forecasting.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="container is-fluid" id="leaderboard" style="margin-top: 2rem; margin-bottom: 3rem; padding: 0 2rem;">
+            <div class="columns is-centered">
+                <div class="column is-12">
+                    <h2 class="title is-3 has-text-centered gradient-text">TFRBench Leaderboard</h2>
+                    <p class="has-text-centered" style="margin-bottom: 2rem;">
+                        Comprehensive evaluations across all datasets and reasoning metrics.
+                    </p>
+
+                    <div class="buttons is-centered" style="margin-bottom: 1rem;">
+                        <button id="btn-overall" class="button is-dark is-rounded pill-tab" onclick="setView('overall')">Overall View</button>
+                        <button id="btn-domain" class="button is-light is-rounded pill-tab" onclick="setView('domain')">Per Domain</button>
+                        <button id="btn-dataset" class="button is-light is-rounded pill-tab" onclick="setView('dataset')">Per Dataset</button>
+                        <button id="btn-detailed" class="button is-light is-rounded pill-tab" onclick="setView('detailed')">Detailed View</button>
+                    </div>
+
+                    <!-- Filter Selectors -->
+                    <div id="selectors-container" class="field is-grouped is-grouped-centered" style="margin-bottom: 1.5rem; display: none;">
+                        <div class="control" id="domain-selector-control" style="display: none;">
+                            <div class="select is-rounded glass-select">
+                                <select id="domain-select" onchange="onFilterChange()" style="border: none;">
+                                    <!-- Populated dynamically -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control" id="dataset-selector-control" style="display: none;">
+                            <div class="select is-rounded glass-select">
+                                <select id="dataset-select" onchange="onFilterChange()" style="border: none;">
+                                    <!-- Populated dynamically -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: center; width: 100%;">
+                        <div id="leaderboard-tables-container" style="border: 1px solid #dbdbdb; border-radius: 6px; display: inline-block;">
+                            </div>
+                    </div>
+
+                    <div class="has-text-centered" style="margin-top: 40px;">
+                        <a href="https://forms.gle/gNqKrmw7hawY5VK99" target="_blank" class="button is-dark is-rounded is-medium">
+                            <strong>Submit Your Model</strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                initLeaderboard();
+            });
+        </script>
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full">
+                    <h2 class="title is-3">Datasets</h2>
+                    <div class="table-container" style="margin-top: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-radius: 8px; display: inline-block;">
+                        <table class="table is-striped is-hoverable" style="margin-bottom: 0;">
+                            <thead>
+                                <tr style="background-color: #f4f4f4;">
+                                    <th class="has-text-centered is-vcentered">Domain</th>
+                                    <th class="has-text-centered is-vcentered">Dataset</th>
+                                    <th class="has-text-centered is-vcentered">Source</th>
+                                    <th class="has-text-centered is-vcentered">Total Samples</th>
+                                    <th class="has-text-centered is-vcentered">Reference Samples</th>
+                                    <th class="has-text-centered is-vcentered">Freq.</th>
+                                    <th class="has-text-centered is-vcentered">Window (in-out)</th>
+                                    <th class="has-text-centered is-vcentered">Ch.</th>
+                                    <th class="has-text-centered is-vcentered">Series</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Energy -->
+                                <tr>
+                                    <td rowspan="2" class="has-text-centered is-vcentered" style="background-color: #fafafa; font-weight: bold; width: 100px;">Energy</td>
+                                    <td class="has-text-centered is-vcentered">Solar</td>
+                                    <td class="has-text-centered is-vcentered">GIFT-Eval</td>
+                                    <td class="has-text-centered is-vcentered">274</td>
+                                    <td class="has-text-centered is-vcentered">193</td>
+                                    <td class="has-text-centered is-vcentered">Daily</td>
+                                    <td class="has-text-centered is-vcentered">96-96</td>
+                                    <td class="has-text-centered is-vcentered">1</td>
+                                    <td class="has-text-centered is-vcentered">137</td>
+                                </tr>
+                                <tr>
+                                    <td class="has-text-centered is-vcentered">Electricity</td>
+                                    <td class="has-text-centered is-vcentered">GIFT-Eval</td>
+                                    <td class="has-text-centered is-vcentered">1346</td>
+                                    <td class="has-text-centered is-vcentered">353</td>
+                                    <td class="has-text-centered is-vcentered">Daily</td>
+                                    <td class="has-text-centered is-vcentered">96-96</td>
+                                    <td class="has-text-centered is-vcentered">1</td>
+                                    <td class="has-text-centered is-vcentered">81</td>
+                                </tr>
+                                <!-- Sales -->
+                                <tr style="border-top: 2px solid #dbdbdb;">
+                                    <td rowspan="2" class="has-text-centered is-vcentered" style="background-color: #fafafa; font-weight: bold;">Sales</td>
+                                    <td class="has-text-centered is-vcentered">Car-parts</td>
+                                    <td class="has-text-centered is-vcentered">GIFT-Eval</td>
+                                    <td class="has-text-centered is-vcentered">1037</td>
+                                    <td class="has-text-centered is-vcentered">692</td>
+                                    <td class="has-text-centered is-vcentered">Monthly</td>
+                                    <td class="has-text-centered is-vcentered">25-25</td>
+                                    <td class="has-text-centered is-vcentered">1</td>
+                                    <td class="has-text-centered is-vcentered">1037</td>
+                                </tr>
+                                <tr>
+                                    <td class="has-text-centered is-vcentered">Hierarchical Sales</td>
+                                    <td class="has-text-centered is-vcentered">GIFT-Eval</td>
+                                    <td class="has-text-centered is-vcentered">1370</td>
+                                    <td class="has-text-centered is-vcentered">1076</td>
+                                    <td class="has-text-centered is-vcentered">Daily</td>
+                                    <td class="has-text-centered is-vcentered">96-96</td>
+                                    <td class="has-text-centered is-vcentered">1</td>
+                                    <td class="has-text-centered is-vcentered">81</td>
+                                </tr>
+                                <!-- Web/CloudOps -->
+                                <tr style="border-top: 2px solid #dbdbdb;">
+                                    <td rowspan="2" class="has-text-centered is-vcentered" style="background-color: #fafafa; font-weight: bold;">Web/CloudOps</td>
+                                    <td class="has-text-centered is-vcentered">Bitbrains Fast Storage</td>
+                                    <td class="has-text-centered is-vcentered">GIFT-Eval</td>
+                                    <td class="has-text-centered is-vcentered">1153</td>
+                                    <td class="has-text-centered is-vcentered">678</td>
+                                    <td class="has-text-centered is-vcentered">Hourly</td>
+                                    <td class="has-text-centered is-vcentered">96-96</td>
+                                    <td class="has-text-centered is-vcentered">2</td>
+                                    <td class="has-text-centered is-vcentered">197</td>
+                                </tr>
+                                <tr>
+                                    <td class="has-text-centered is-vcentered">Web Traffic</td>
+                                    <td class="has-text-centered is-vcentered">Monash archive</td>
+                                    <td class="has-text-centered is-vcentered">1214</td>
+                                    <td class="has-text-centered is-vcentered">710</td>
+                                    <td class="has-text-centered is-vcentered">Daily</td>
+                                    <td class="has-text-centered is-vcentered">96-96</td>
+                                    <td class="has-text-centered is-vcentered">1</td>
+                                    <td class="has-text-centered is-vcentered">162</td>
+                                </tr>
+                                <!-- Transportation -->
+                                <tr style="border-top: 2px solid #dbdbdb;">
+                                    <td rowspan="2" class="has-text-centered is-vcentered" style="background-color: #fafafa; font-weight: bold;">Transportation</td>
+                                    <td class="has-text-centered is-vcentered">Traffic</td>
+                                    <td class="has-text-centered is-vcentered">Autoformer et al.</td>
+                                    <td class="has-text-centered is-vcentered">1104</td>
+                                    <td class="has-text-centered is-vcentered">449</td>
+                                    <td class="has-text-centered is-vcentered">Hourly</td>
+                                    <td class="has-text-centered is-vcentered">96-96</td>
+                                    <td class="has-text-centered is-vcentered">1</td>
+                                    <td class="has-text-centered is-vcentered">6</td>
+                                </tr>
+                                <tr>
+                                    <td class="has-text-centered is-vcentered">NYC Taxi</td>
+                                    <td class="has-text-centered is-vcentered">nyc.gov</td>
+                                    <td class="has-text-centered is-vcentered">1000</td>
+                                    <td class="has-text-centered is-vcentered">391</td>
+                                    <td class="has-text-centered is-vcentered">Hourly</td>
+                                    <td class="has-text-centered is-vcentered">96-96</td>
+                                    <td class="has-text-centered is-vcentered">1</td>
+                                    <td class="has-text-centered is-vcentered">1</td>
+                                </tr>
+                                <!-- Economics/Finance -->
+                                <tr style="border-top: 2px solid #dbdbdb;">
+                                    <td rowspan="2" class="has-text-centered is-vcentered" style="background-color: #fafafa; font-weight: bold;">Economics/Finance</td>
+                                    <td class="has-text-centered is-vcentered">Amazon pricing</td>
+                                    <td class="has-text-centered is-vcentered">Yahoo Finance/nasdaq</td>
+                                    <td class="has-text-centered is-vcentered">512</td>
+                                    <td class="has-text-centered is-vcentered">328</td>
+                                    <td class="has-text-centered is-vcentered">Daily</td>
+                                    <td class="has-text-centered is-vcentered">14-7</td>
+                                    <td class="has-text-centered is-vcentered">5</td>
+                                    <td class="has-text-centered is-vcentered">1</td>
+                                </tr>
+                                <tr>
+                                    <td class="has-text-centered is-vcentered">Apple pricing</td>
+                                    <td class="has-text-centered is-vcentered">Yahoo Finance/nasdaq</td>
+                                    <td class="has-text-centered is-vcentered">809</td>
+                                    <td class="has-text-centered is-vcentered">509</td>
+                                    <td class="has-text-centered is-vcentered">Daily</td>
+                                    <td class="has-text-centered is-vcentered">14-7</td>
+                                    <td class="has-text-centered is-vcentered">5</td>
+                                    <td class="has-text-centered is-vcentered">1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h2 class="subtitle has-text-centered" style="max-width: 95%; margin-left: auto; margin-right: auto;">
+                        <i>TFRBench</i> provides a multi-domain suite with diverse temporal frequencies and dimensionalities, including univariate to multivariate series.
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- <section class="section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Performance</h2>
+
+                    <h3 class="title is-4">Overall Success Rate</h3>
+                    <div class="performance-image">
+                        <img src="./static/images/performance_1.png" alt="Overall Success Rate" style="width: 100%;">
+                    </div>
+                    <h2 class="subtitle has-text-centered" style="margin-left: auto; margin-right: auto;">
+                        Percentage of samples achieving MASE < 1.0 across datasets. The strategic reasoning (w/
+                        Reasoning (Ours)) module consistently outperforms the direct prompting baseline. TSFM part
+                        represents Time Series Foundational models.
+                    </h2>
+                    <br><br>
+
+                    <h3 class="title is-4">LLM-as-a-Judge Results</h3>
+                </div>
+            </div>
+        </div> -->
+
+        
+         <section class="hero teaser">
+        <div class="container is-max-desktop">
+            <div class="hero-body">
+                <center>
+                    <img src="./static/images/method.png" width="100%" alt="TFRBench Overall Methodology Overview">
+                </center>
+                <h2 class="subtitle has-text-centered">
+                    Overview of Data Creation System. The pipeline integrates context retrieval, assumption
+                    verification, and a feedback loop to align reasoning with forecasting. The system orchestrates
+                    agents to iteratively refine reasoning traces until the forecast outperforms the naive baseline
+                    (MASE < 1.0), and LLM verifier gives high Score.
+                </h2>
+            </div>
+        </div>
+    </section>
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    
+                    <!-- <h2 class="subtitle has-text-centered" style="margin-left: auto; margin-right: auto;">
+                        Score Range: 1–5 (higher is better). Color intensity reflects performance (green: high,
+                        red:low). Dom.: Domain Relevance, Fcst.: Forecasting Correctness, Evt.: Event Relevance,
+                        Logic: Logic-to-Number Consistency.
+                    </h2>
+                    <br><br>
+
+                    <h3 class="title is-4">Reasoning Quality vs. MASE</h3>
+                    <div class="performance-image">
+                        <img src="./static/images/reasoning_correlation.png" alt="Reasoning Quality vs. MASE"
+                            style="width: 100%;">
+                    </div>
+                    <h2 class="subtitle has-text-centered" style="margin-left: auto; margin-right: auto;">
+                        Models with higher reasoning quality (Judge Score) achieve better forecasting accuracy
+                        (lower MASE). Conversely, lower reasoning scores are associated with higher forecasting errors.
+                    </h2>
+                    <br><br> -->
+
+                    <h3 class="title is-4">Reasoning Output Example</h3>
+
+                    <div class="box has-text-left" style="border: 2px solid #4a4a4a;">
+                        <h5 class="title is-5">Reasoning Example (Economics/Finance Domain)</h5>
+
+                        <figure class="image has-text-centered" style="margin-bottom: 1.5rem;">
+                            <img src="./static/images/apple.png" alt="Apple Stock Forecast Plot"
+                                style="max-width: 70%; margin: 0 auto; border: 1px solid #ddd;">
+                        </figure>
+
+                        <div id="reasoning-text-container"
+                            style="max-height: 160px; overflow: hidden; position: relative; transition: max-height 0.5s ease;">
+
+                            <div class="content is-small">
+
+                                <p><strong>[Close]:</strong></p>
+                                <ul>
+                                    <li><strong>Cross-Channel Analysis:</strong> The Close price forecast must
+                                        be logically consistent with the other price channels, falling strictly
+                                        between the High and Low forecasts for the day. It is strongly
+                                        influenced by the Open price and serves as the primary anchor for the
+                                        next day's Open. Significant movements in the Close price should be
+                                        accompanied by a corresponding increase in the Volume forecast,
+                                        signaling market conviction.</li>
+                                    <li><strong>Trend Component Plan:</strong> Following the recent sharp
+                                        decline, model a flattening of the underlying trend. This represents a
+                                        period of price stabilization. The trend should not be extrapolated
+                                        downwards aggressively; instead, it should reflect the potential for the
+                                        price to re-test recent low points as part of a bottoming process.</li>
+                                    <li><strong>Seasonality Component Plan:</strong> Project the established
+                                        weekly (day-of-the-week) seasonality pattern forward. This pattern
+                                        captures the regular, recurring investor behaviors observed throughout a
+                                        typical trading week.</li>
+                                    <li><strong>Residuals & Event Plan:</strong> The "U.S. Senate Bombing
+                                        (1983-11-07)" introduced significant market uncertainty.
+                                        <ul>
+                                            <li><strong>U.S. Senate Bombing (1983-11-07):</strong> Incorporate a
+                                                sharp, negative residual shock (a downward adjustment of around
+                                                2-4% of the price) on and for a few days after this date to
+                                                model the resulting fear and selling pressure.</li>
+                                            <li><strong>Non-Impactful Events:</strong> The "Martin Luther King,
+                                                Jr. Day Bill Signed" and "Jesse Jackson Announces Presidential
+                                                Candidacy" events are considered to have a negligible impact on
+                                                market residuals.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+
+                                <p><strong>[High]:</strong></p>
+                                <ul>
+                                    <li><strong>Cross-Channel Analysis:</strong> The High forecast must be the
+                                        highest value of all price channels for any given day, acting as a
+                                        ceiling for the Open, Low, and Close. The spread between the High and
+                                        Low is a measure of volatility and is expected to widen on days with
+                                        higher forecasted Volume, reflecting greater market activity and
+                                        uncertain.</li>
+                                    <li><strong>Trend Component Plan:</strong> The trend for the High price will
+                                        closely follow the stabilized trend modeled for the other price channels
+                                        (Open, Close, Low), reflecting a pause in the recent sharp downtrend.
+                                    </li>
+                                    <li><strong>Seasonality Component Plan:</strong> Continue to apply the
+                                        established weekly seasonality pattern, which reflects recurring
+                                        intraday peaks in buying pressure that vary by the day of the week.</li>
+                                    <li><strong>Residuals & Event Plan:</strong> The market uncertainty
+                                        following the "U.S. Senate Bombing (1983-11-07)" will increase intraday
+                                        volatility.
+                                        <ul>
+                                            <li><strong>U.S. Senate Bombing (1983-11-07):</strong> Introduce
+                                                moderate positive residuals (upward adjustments of 1-3% of the
+                                                price) on the days following the event to model
+                                                higher-than-expected price spikes as the market reacts with
+                                                choppiness.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+
+                                <p><strong>[Low]:</strong></p>
+                                <ul>
+                                    <li><strong>Cross-Channel Analysis:</strong> The Low forecast must be the
+                                        lowest value of all price channels for a given day, serving as the floor
+                                        for the Open, High, and Close. A widening gap between High and Low,
+                                        driven by a lower Low, indicates increased selling pressure and should
+                                        be correlated with higher forecasted Volume.</li>
+                                    <li><strong>Trend Component Plan:</strong> The trend for the Low price will
+                                        move in lockstep with the other price channels. Model a stabilization of
+                                        the trend, indicating that the intense downward pressure from the recent
+                                        sell-off is subsiding but that the risk of re-testing recent lows
+                                        remains.</li>
+                                    <li><strong>Seasonality Component Plan:</strong> Project the existing weekly
+                                        seasonality pattern forward, as intraday selling pressure often reaches
+                                        its peak at predictable times during the trading week.</li>
+                                    <li><strong>Residuals & Event Plan:</strong> The "U.S. Senate Bombing
+                                        (1983-11-07)" is expected to heighten investor fear.
+                                        <ul>
+                                            <li><strong>U.S. Senate Bombing (1983-11-07):</strong> Apply a
+                                                significant negative residual shock (a downward adjustment of
+                                                3-5% of the price) on and immediately after this date to capture
+                                                the increased selling pressure pushing the daily low further
+                                                down.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+
+                                <p><strong>[Open]:</strong></p>
+                                <ul>
+                                    <li><strong>Cross-Channel Analysis:</strong> The Open price is fundamentally
+                                        anchored to the previous day's Close. Forecasted gaps between the prior
+                                        Close and the Open signal overnight sentiment shifts and suggest a more
+                                        volatile session ahead, which should be reflected in a wider High-Low
+                                        range and higher Volume for that day.</li>
+                                    <li><strong>Trend Component Plan:</strong> The trend for the Open will be
+                                        nearly identical to the Close price's trend. It should reflect the same
+                                        stabilization pattern after the recent sharp price decline.</li>
+                                    <li><strong>Seasonality Component Plan:</strong> Maintain the established
+                                        day-of-the-week seasonality pattern, as certain days may systematically
+                                        open higher or lower relative to the previous close due to recurring
+                                        news cycles or investor behavior.</li>
+                                    <li><strong>Residuals & Event Plan:</strong> The primary impact of the "U.S.
+                                        Senate Bombing (1983-11-07)" would be felt at the market open on the
+                                        following day.
+                                        <ul>
+                                            <li><strong>U.S. Senate Bombing (1983-11-07):</strong> Apply a large
+                                                negative residual on the morning of 1983-11-08 to model the
+                                                market gapping down as it digests the overnight news.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+
+                                <p><strong>[Volume]:</strong></p>
+                                <ul>
+                                    <li><strong>Cross-Channel Analysis:</strong> Volume is positively correlated
+                                        with volatility (the High-Low spread). A forecast for a stable or narrow
+                                        trading range in the price channels should correspond with a forecast
+                                        for lower Volume. Conversely, a large price movement or wide trading
+                                        range implies higher Volume.</li>
+                                    <li><strong>Trend Component Plan:</strong> The underlying trend for Volume
+                                        should show a sharp decay from the recent massive spike. Model a
+                                        mean-reversion process where trading activity returns toward more normal
+                                        historical levels, though potentially remaining slightly elevated
+                                        compared to the pre-spike baseline.</li>
+                                    <li><strong>Seasonality Component Plan:</strong> Project the typical weekly
+                                        seasonality forward. This often includes higher volume at the beginning
+                                        and end of the week (Monday/Friday) and lower volume mid-week.</li>
+                                    <li><strong>Residuals & Event Plan:</strong>
+                                        <ul>
+                                            <li><strong>U.S. Senate Bombing (1983-11-07):</strong> This event
+                                                will drive a surge in trading activity. Incorporate a large
+                                                positive residual shock (a spike of 1.5x to 2.5x the recent
+                                                average) to Volume around this date to reflect fear-based
+                                                trading.</li>
+                                            <li><strong>Veterans Day (1983-11-11):</strong> Apply a moderate
+                                                negative residual to model the lighter-than-expected trading
+                                                volume often associated with holidays.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                            <div id="reasoning-fade"
+                                style="position: absolute; bottom: 0; left: 0; width: 100%; height: 80px; background: linear-gradient(transparent, white); pointer-events: none;">
+                            </div>
+                        </div>
+
+                        <div class="has-text-centered" style="margin-top: 15px;">
+                            <button id="toggle-btn" class="button is-small is-rounded is-dark"
+                                onclick="toggleReasoning()">
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down"></i>
+                                </span>
+                                <span>Show Full Details</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="BibTeX">
+        <div class="container is-max-desktop content">
+            <h2 class="title">BibTeX</h2>
+            <pre><code>@inproceedings{tfrbench,
+    title={TFRBench: A Reasoning Benchmark for Evaluating Forecasting Systems},
+    author={Md Atik Ahamed, Mihir Parmar, Palash Goyal, Yiwen Song, Long T. Le, Qiang Cheng, Chun-Liang Li, Hamid Palangi, Jinsung Yoon, Tomas Pfister},
+    booktitle={arXiv},
+    year={2026},
+    url={https://arxiv.org/pdf/#}
+}</code></pre>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-8">
+                    <div class="content">
+                        <center>
+                            <p>
+                                Built with <i class="fas fa-heart" style="color: #e74c3c;"></i>
+                                for Machine Learning Research.
+                            </p>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

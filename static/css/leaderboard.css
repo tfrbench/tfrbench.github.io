@@ -1,0 +1,63 @@
+/* TFRBench Leaderboard Custom Styles */
+
+/* Modern Gradient Text for Headings */
+.gradient-text {
+    background: linear-gradient(135deg, #12c2e9 0%, #c471ed 50%, #f64f59 100%) !important; /* Dramatic Cyan-Purple-Pink */
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+/* Glassmorphism Select Dropdown */
+.glass-select {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease;
+}
+
+.glass-select:hover {
+    border-color: #FF416C !important;
+    box-shadow: 0 6px 20px rgba(255, 65, 108, 0.15) !important;
+}
+
+/* Modern Pill Tabs */
+.pill-tab {
+    border-radius: 50px !important;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    border: none !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 1.5rem !important;
+}
+
+.pill-tab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.pill-tab.is-active-gradient {
+    background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%) !important; /* Premium Blue/Purple gradient */
+    color: white !important;
+}
+
+/* Reset for inactive tabs in Bulma */
+.pill-tab.is-light {
+    background-color: #f5f5f5 !important;
+    color: #4a4a4a !important;
+}
+
+/* Subtle elevation for controls bar */
+.controls-container {
+    background: #fdfdfd;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    border: 1px solid #f0f0f0;
+    margin-bottom: 2rem;
+}
