@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TFRBench Submission Validator - Fail-Fast Mode</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        body {
+            font-family: 'Google Sans', sans-serif;
+            padding: 40px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #1a73e8;
+        }
+        .upload-area {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .upload-area:hover {
+            border-color: #1a73e8;
+        }
+        #fileInput {
+            display: none;
+        }
+        #status {
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+        }
+        #log {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+            background: #fafafa;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success { color: #0f9d58; }
+        .error { color: #db4437; font-weight: bold; }
+        .warning { color: #f4b400; }
+        .action-btn {
+            display: inline-block;
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        .action-btn:hover {
+            background-color: #1557b0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TFRBench Submission Validator</h1>
+        <p>Upload your submission ZIP file to check its format before submitting to the leaderboard. (Fail-Fast Mode)</p>
+        
+        <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+            <p>Click to select or drag and drop your ZIP file</p>
+            <input type="file" id="fileInput" accept=".zip">
+        </div>
+
+        <div id="status"></div>
+        <div id="log"></div>
+    </div>
+
+    <script>
+        const EXPECTED_COUNTS = {
+            "NYC_Taxi": 391,
+            "amazon": 328,
+            "apple": 509,
+            "bitbrains_fast_storage": 678,
+            "car_parts": 692,
+            "electricity": 353,
+            "hierarchical_sales": 1076,
+            "solar_daily": 193,
+            "traffic": 449,
+            "web_traffic": 710
+        };
+
+        const DATASETS = Object.keys(EXPECTED_COUNTS);
+
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            document.getElementById('status').innerHTML = "⏳ Processing file: " + file.name;
+            document.getElementById('log').innerHTML = "";
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const arrayBuffer = e.target.result;
+                JSZip.loadAsync(arrayBuffer).then(function(zip) {
+                    validateZip(zip);
+                }).catch(function(err) {
+                    log("Error loading zip: " + err.message, "error");
+                    document.getElementById('status').innerHTML = "<span class='error'>Failed to load ZIP file. It might be corrupted or not a valid ZIP.</span>";
+                });
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        function log(message, type) {
+            const logDiv = document.getElementById('log');
+            const span = document.createElement('span');
+            span.className = type;
+            span.innerText = message + "\n";
+            logDiv.appendChild(span);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        async function validateZip(zip) {
+            log("📋 Starting Fail-Fast Validation...", "");
+            const statusDiv = document.getElementById('status');
+            
+            try {
+                // 1. Check for extra files (Warning only, doesn't stop)
+                log("\n[Check 1] Scanning for unexpected files...", "");
+                zip.forEach(function (relativePath, file){
+                    if (!relativePath.endsWith('.json') && relativePath !== "metadata.json") {
+                         log("  ⚠️ Unexpected file type: " + relativePath, "warning");
+                    } else if (relativePath.endsWith('.json') && relativePath !== "metadata.json" ) {
+                         const baseName = relativePath.replace(".json", "");
+                         if (!DATASETS.includes(baseName)) {
+                              log("  ⚠️ Unexpected dataset file: " + relativePath, "warning");
+                         }
+                    }
+                });
+
+                // 2. Check Metadata.json
+                log("\n[Check 2] Verifying metadata.json...", "");
+                const metadataFile = zip.file("metadata.json");
+                if (!metadataFile) {
+                    throw new Error("Missing metadata.json at root");
+                }
+                
+                log("  ✅ Found metadata.json at root", "success");
+                const metaContent = await metadataFile.async("string");
+                try {
+                    const meta = JSON.parse(metaContent);
+                    if (!meta.model_name) {
+                        log("    ⚠️ metadata.json missing 'model_name' field", "warning");
+                    }
+                } catch (e) {
+                    throw new Error("Failed to parse metadata.json: " + e.message);
+                }
+
+                // 3. Check Dataset Files and Schema (Sequentially for Fail-Fast)
+                log("\n[Check 3] Verifying dataset files and schema...", "");
+                
+                for (const dataset of DATASETS) {
+                    const filename = dataset + ".json";
+                    const file = zip.file(filename);
+                    
+                    if (!file) {
+                        throw new Error("Missing prediction file: " + filename);
+                    }
+                    
+                    log("  Checking " + filename + "...", "");
+                    
+                    const content = await file.async("string");
+                    let data;
+                    try {
+                        data = JSON.parse(content);
+                    } catch (e) {
+                        throw new Error("Failed to parse " + filename + " (Invalid JSON format): " + e.message);
+                    }
+                    
+                    if (!Array.isArray(data)) {
+                        throw new Error(filename + ": Data must be a JSON array");
+                    }
+
+                    const count = data.length;
+                    const expected = EXPECTED_COUNTS[dataset];
+                    
+                    if (count !== expected) {
+                        throw new Error(dataset + ": Sample count mismatch! Expected " + expected + ", got " + count);
+                    }
+
+                    // Schema check for each item
+                    for (let index = 0; index < data.length; index++) {
+                        const item = data[index];
+                        if (typeof item !== 'object' || item === null) {
+                            throw new Error(filename + "[" + index + "]: Item is not an object");
+                        }
+                        
+                        if (!item.hasOwnProperty('id')) {
+                            throw new Error(filename + "[" + index + "]: Missing 'id' field");
+                        }
+                        if (!item.hasOwnProperty('Reasoning')) {
+                            throw new Error(filename + "[" + index + "]: Missing 'Reasoning' field");
+                        }
+                        if (!item.hasOwnProperty('Prediction')) {
+                            throw new Error(filename + "[" + index + "]: Missing 'Prediction' field");
+                        }
+                        if (!Array.isArray(item.Prediction)) {
+                            throw new Error(filename + "[" + index + "]: 'Prediction' must be an array");
+                        }
+                    }
+                    
+                    log("    ✅ " + filename + ": Passed all checks", "success");
+                }
+
+                // If we reached here, all files passed
+                log("\n----------------------------------------", "");
+                statusDiv.innerHTML = "<span class='success'>🎉 Rigorous Validation Passed! Your submission meets all format requirements.</span><br><br>" +
+                                      "<a href='https://forms.gle/gNqKrmw7hawY5VK99' target='_blank' class='action-btn'>Submit via Google Form</a>";
+                log("All checks passed successfully.", "success");
+
+            } catch (error) {
+                log("\n----------------------------------------", "");
+                log("❌ Validation Stalled: " + error.message, "error");
+                statusDiv.innerHTML = "<span class='error'>❌ Validation Failed. Please fix the error shown in the log above and try again.</span>";
+            }
+        }
+    </script>
+</body>
+</html>
