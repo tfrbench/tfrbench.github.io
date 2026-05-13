@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TFRBench Submission Validator - Fail-Fast Mode</title>
+    <title>TFRBench Submission Validator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         body {
@@ -230,7 +230,7 @@
             } catch (error) {
                 log("\n----------------------------------------", "");
                 log("❌ Validation Stalled: " + error.message, "error");
-                statusDiv.innerHTML = "<span class='error'>❌ Validation Failed. Please fix the error shown in the log above and try again.</span>";
+                statusDiv.innerHTML = "<span class='error'>❌ Validation Failed. Please fix the error shown in the log below and try again.</span>";
             }
         }
     </script>
