@@ -96,14 +96,21 @@
                         <div class="column has-text-centered">
                             <div class="publication-links">
                                 <span class="link-block">
-                                    <a href="#" class="external-link button is-normal is-rounded is-dark">
+                                    <a href="https://arxiv.org/abs/2604.05364" target="_blank" rel="noopener noreferrer" class="external-link button is-normal is-rounded is-dark">
                                         <span class="icon"><i class="ai ai-arxiv"></i></span>
                                         <span>arXiv</span>
                                     </a>
                                 </span>
 
                                 <span class="link-block">
-                                    <a href="https://huggingface.co/datasets/AtikAhamed/TFRBench" class="external-link button is-normal is-rounded is-dark">
+                                    <a href="https://icml.cc/virtual/2026/poster/66488" target="_blank" rel="noopener noreferrer" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon"><i class="fas fa-award"></i></span>
+                                        <span>ICML</span>
+                                    </a>
+                                </span>
+
+                                <span class="link-block">
+                                    <a href="https://huggingface.co/datasets/AtikAhamed/TFRBench" target="_blank" rel="noopener noreferrer" class="external-link button is-normal is-rounded is-dark">
                                         <span class="icon">🤗</span>
                                         <span>Submit Yours</span>
                                     </a>
@@ -153,10 +160,10 @@
                             useful for evaluation; and prompting LLMs with
                             our generated traces significantly improves forecasting accuracy compared to direct
                             numerical prediction (e.g., avg. ∼ 40.2% → 56.6%), validating the quality of our reasoning.
-                            Conversely, benchmarking experiments reveal that off-theshelf LLMs consistently struggle with both
+                            Conversely, benchmarking experiments reveal that off-the-shelf LLMs consistently struggle with both
                             reasoning (lower LLM-as-a-Judge scores) and numerical forecasting, frequently failing to capture
                             domain-specific dynamics. <i>TFRBench</i> thus establishes a new standard for interpretable,
-                            reasoningbased evaluation in time-series forecasting.
+                            reasoning-based evaluation in time-series forecasting.
                         </p>
                     </div>
                 </div>
@@ -476,7 +483,7 @@
                                         ceiling for the Open, Low, and Close. The spread between the High and
                                         Low is a measure of volatility and is expected to widen on days with
                                         higher forecasted Volume, reflecting greater market activity and
-                                        uncertain.</li>
+                                        uncertainty.</li>
                                     <li><strong>Trend Component Plan:</strong> The trend for the High price will
                                         closely follow the stabilized trend modeled for the other price channels
                                         (Open, Close, Low), reflecting a pause in the recent sharp downtrend.
@@ -603,12 +610,13 @@
     <section class="section" id="BibTeX">
         <div class="container is-max-desktop content">
             <h2 class="title">BibTeX</h2>
-            <pre><code>@inproceedings{tfrbench,
-    title={TFRBench: A Reasoning Benchmark for Evaluating Forecasting Systems},
-    author={Md Atik Ahamed, Mihir Parmar, Palash Goyal, Yiwen Song, Long T. Le, Qiang Cheng, Chun-Liang Li, Hamid Palangi, Jinsung Yoon, Tomas Pfister},
-    booktitle={arXiv},
-    year={2026},
-    url={https://arxiv.org/pdf/#}
+            <pre><code>@inproceedings{
+ahamed2026tfrbench,
+title={{TFRB}ench: A Reasoning Benchmark for Evaluating Forecasting Systems},
+author={Md Atik Ahamed and Mihir Parmar and Palash Goyal and Yiwen Song and Long T. Le and Qiang Cheng and Chun-Liang Li and Hamid Palangi and Jinsung Yoon and Tomas Pfister},
+booktitle={Forty-third International Conference on Machine Learning},
+year={2026},
+url={https://openreview.net/forum?id=3ExTD9F0u1}
 }</code></pre>
         </div>
     </section>
